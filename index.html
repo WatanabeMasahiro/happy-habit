@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Habit Tracker v1</title>
+  <meta name="description" content="サイトの説明">
+  <meta property="og:title" content="サイトタイトル">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="">
+  <meta property="og:description" content="サイトの説明">
+  <meta property="og:site_name" content="サイト名">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48"/>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script type="module" src="main.js" defer></script>
+</head>
+<body>
+  <header id="header">
+    <h1 class="site-name">Habit Tracker</h1>
+  </header>
+
+  <main id="app">
+    <div class="monthly-change-field">
+      <button id="prevMonth">＜</button>
+      <h2 id="currentMonthDisplay">2026年 5月</h2>
+      <button id="nextMonth">＞</button>
+    </div>
+    <div class="matrix-wrapper">
+      <div class="matrix-inner">
+        <table id="trackerTable">
+          <thead>
+            <tr id="dateHeader">
+              <!-- JSで日付ヘッダーを生成 -->
+            </tr>
+          </thead>
+          <tbody id="trackerBody">
+            <!-- JSでカテゴリとTODO行を生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="add-category-item-btn">
+      <button><span>+</span>カテゴリ追加</button>
+    </div>
+  </main>
+
+  <!-- マス目用ステータスダイアログ -->
+  <dialog id="statusDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <!-- TODO: ◯/◯の更新というふうに表示 -->
+          <h3>項目の更新</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <form class="modal-body-button-form" method="dialog">
+          <div class="modal-body-select">
+            <label><input type="radio" name="status" value="true">マル</label>
+            <label><input type="radio" name="status" value="false">バツ</label>
+            <label><input type="radio" name="status" value="none">未定</label>
+          </div>
+          <hr>
+          <div class="modal-body-comments">
+            <label for="memoArea">備考</label>
+            <textarea id="memoArea" placeholder="任意記入" rows="4" cols="32"></textarea>
+          </div>
+          <hr>
+          <div class="dialog-btns">
+            <button class="button" id="saveStatus" type="submit">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- カテゴリー編集用のダイアログ -->
+  <dialog id="categoryEditDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>カテゴリーの更新</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="modal-body-item-name">
+          <label for="editCategoryName">カテゴリー名：</label>
+          <input type="text" id="editCategoryName" class="category-name-input">
+        </div>
+        <div class="modal-body-order-btns">
+          <button type="button" id="categoryMoveUpBtn">↑ 上へ移動</button>
+          <button type="button" id="categoryMoveDownBtn">↓ 下へ移動</button>
+        </div>
+        <div class="modal-body-category-color">
+          <label for="categoryColorEdit">背景色：</label>
+          <input
+            type="color" 
+            id="categoryColorEdit" 
+            class="category-color-input"
+            list="colorListEdit" 
+            value="#c8e6c9"
+          >
+          <datalist id="colorListEdit">
+            <option value="#C8E6C9">パステルグリーン</option>
+            <option value="#FFF9C4">パステルイエロー</option>
+            <option value="#BBDEFB">パステルブルー</option>
+            <option value="#F8BBD0">パステルピンク</option>
+            <option value="#E1BEE7">パステルパープル</option>
+            <option value="#FFE0B2">パステルオレンジ</option>
+          </datalist>
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="deleteCategoryBtn">削除</button>
+          <button type="button" id="saveCategoryEdit">保存</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- カテゴリー内のリスト項目編集用のダイアログ -->
+  <dialog id="itemEditDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>リスト項目の更新</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="category-name-field">
+          カテゴリ名：
+          <span id="displayCatName"></span>
+        </div>
+        <div class="modal-body-item-name">
+          <label for="editItemName">項目名：</label>
+          <input type="text" id="editItemName" class="item-name-input">
+        </div>
+        <div class="modal-body-order-btns">
+          <button type="button" id="moveUpBtn">↑ 上へ移動</button>
+          <button type="button" id="moveDownBtn">↓ 下へ移動</button>
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="deleteItemBtn">削除</button>
+          <button type="button" id="saveItemEdit">保存</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- カテゴリー追加用のダイアログ -->
+  <dialog id="addCategoryDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>カテゴリの追加</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="modal-body-category-name">
+          <label for="categoryName">カテゴリ名：</label>
+          <input type="text" id="categoryName" class="category-name-input">
+        </div>
+        <div class="modal-body-category-color">
+          <label for="categoryColor">背景色：</label>
+          <input
+            type="color" 
+            id="categoryColor" 
+            class="category-color-input"
+            list="colorList" 
+            value="#c8e6c9"
+          >
+          <datalist id="colorList">
+            <option value="#C8E6C9">パステルグリーン</option>
+            <option value="#FFF9C4">パステルイエロー</option>
+            <option value="#BBDEFB">パステルブルー</option>
+            <option value="#F8BBD0">パステルピンク</option>
+            <option value="#E1BEE7">パステルパープル</option>
+            <option value="#FFE0B2">パステルオレンジ</option>
+          </datalist>
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="saveCategory">追加</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

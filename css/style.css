@@ -1,0 +1,293 @@
+@charset "UTF-8";
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+    scroll-padding-top: 80px;
+    scroll-behavior: smooth;
+  }
+}
+body > header > .site-name {
+  text-align: center;
+  margin-block: 24px;
+}
+body > main {
+  margin-inline: 24px;
+}
+body > main > .monthly-change-field {
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-block: 8px;
+}
+body > main > .monthly-change-field > button#prevMonth, body > main > .monthly-change-field > button#nextMonth {
+  cursor: pointer;
+}
+body > main > .monthly-change-field > #currentMonthDisplay {
+  padding-inline: 16px;
+}
+body > main > .matrix-wrapper {
+  padding: 20px;
+  background: #eee;
+  border: 4px solid #888;
+  border-radius: 16px;
+}
+body > main > .matrix-wrapper > .matrix-inner {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 2px solid #888;
+  border-radius: 4px;
+  margin-inline: auto;
+}
+body > main > .matrix-wrapper > .matrix-inner table {
+  background: #fff;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+body > main > .matrix-wrapper > .matrix-inner th, body > main > .matrix-wrapper > .matrix-inner td {
+  border: 1px solid #888;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+body > main > .matrix-wrapper > .matrix-inner .is-today {
+  background: yellow;
+}
+body > main > .matrix-wrapper > .matrix-inner .sticky-col {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  width: 200px;
+  z-index: 0;
+  text-align: left;
+  padding-left: 10px;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
+}
+body > main > .matrix-wrapper > .matrix-inner .sticky-col:not(th) {
+  cursor: pointer;
+}
+body > main > .matrix-wrapper > .matrix-inner .sticky-col::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #999;
+}
+body > main > .matrix-wrapper > .matrix-inner .category-row {
+  font-weight: bold;
+}
+body > main > .matrix-wrapper > .matrix-inner .category-row td {
+  background: var(--cat-color, #eee);
+}
+body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title {
+  padding: 8px;
+}
+body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title > .add-item-btn {
+  position: absolute;
+  right: 8px;
+  border: 2px solid #888;
+  border-radius: 8px;
+  cursor: pointer;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn {
+  width: 100%;
+  height: 100%;
+  line-height: 40px;
+  cursor: pointer;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=true]::before {
+  content: "◯";
+  font-size: 1.5rem;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=false]::before {
+  content: "×";
+  font-size: 1.5rem;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none] {
+  background: #e0e0e0;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
+  background: #e0e0e0;
+}
+body > main > .add-category-item-btn {
+  margin-block: 10px;
+}
+body > main > .add-category-item-btn > button {
+  padding: 8px 16px;
+  border: 1px solid #888;
+  border-radius: 16px;
+  cursor: pointer;
+}
+body > main > .add-category-item-btn > button > span {
+  padding-right: 4px;
+}
+body > dialog {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+}
+body > dialog[open] {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 100svw;
+  height: 100svh;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  animation: fadeInDialogBackground 0.4s ease forwards;
+}
+@keyframes fadeInDialogBackground {
+  from {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(1px);
+  }
+}
+body > dialog[open] > .modal-card {
+  background: #fff;
+  width: max(400px, 40svw);
+  height: auto;
+  margin-block: 16svh auto;
+  margin-inline: auto;
+  border-radius: 8px;
+  animation: slideInDownModalCard 0.8s ease-out forwards;
+}
+@keyframes slideInDownModalCard {
+  from {
+    opacity: 0.5;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+body > dialog[open] > .modal-card > .modal-header {
+  position: relative;
+}
+body > dialog[open] > .modal-card > .modal-header > .modal-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 24px;
+  padding-bottom: 16px;
+}
+body > dialog[open] > .modal-card > .modal-header > .modal-title h3 {
+  text-align: center;
+  width: 80%;
+}
+body > dialog[open] > .modal-card > .modal-header > .modal-close-icon-button {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  cursor: pointer;
+}
+body > dialog[open] > .modal-card > .modal-header > .modal-close-icon-button:hover {
+  border-radius: 4px;
+  background: #ccc;
+  transition: background 0.2s;
+}
+body > dialog[open] > .modal-card > .modal-hr {
+  width: 96%;
+  margin-inline: auto;
+  border: 1px solid #404040;
+}
+body > dialog[open] > .modal-card > .modal-body div {
+  margin-block: 24px;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-comments {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-inline: auto;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-comments > label {
+  font-weight: bolder;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-comments > textarea {
+  border: 2px solid #888;
+  border-radius: 4px;
+}
+body > dialog[open] > .modal-card > .modal-body div.category-name-field {
+  text-align: center;
+  margin-block: 10px 0;
+}
+body > dialog[open] > .modal-card > .modal-body div.category-name-field > #displayCatName {
+  font-weight: bold;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name, body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name {
+  display: flex;
+  flex-direction: column;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-inline: auto;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name label, body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name label {
+  font-weight: bolder;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name input[type=text] {
+  border: 2px solid #444444;
+  border-radius: 8px;
+  width: 16rem;
+  padding: 4px 8px;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-category-color {
+  text-align: center;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns > button {
+  line-height: 1;
+  color: #444444;
+  background: rgb(255, 208, 120);
+  border: 2px solid #444444;
+  border-radius: 16px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns > button:hover {
+  background: orange;
+  transition: background 0.2s;
+}
+body > dialog[open] > .modal-card > .modal-body div.dialog-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+body > dialog[open] > .modal-card > .modal-body div.dialog-btns > button {
+  font-weight: bold;
+  line-height: 1;
+  color: #444444;
+  background: #dddddd;
+  border: 2px solid #444444;
+  border-radius: 100vmax;
+  padding: 0.75em 2em;
+  cursor: pointer;
+}
+body > dialog[open] > .modal-card > .modal-body div.dialog-btns > button:hover {
+  background: #ccc;
+  transition: background 0.2s;
+}
