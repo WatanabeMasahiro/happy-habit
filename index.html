@@ -133,6 +133,33 @@
     </div>
   </dialog>
 
+  <!-- カテゴリー内のリスト項目追加用のダイアログ -->
+  <dialog id="additemDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>リスト項目の追加</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="modal-body-item-name">
+          <label for="addItemName">項目名：</label>
+          <input type="text" id="addItemName" class="add-item-input">
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="saveItemAdd">追加</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- カテゴリー内のリスト項目編集用のダイアログ -->
   <dialog id="itemEditDialog">
     <div class="modal-card">

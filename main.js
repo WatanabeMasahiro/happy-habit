@@ -100,21 +100,6 @@ class HabitTracker {
 
   bindEvents() {
     const addCatBtn = document.querySelector('.add-category-item-btn button');
-    if (addCatBtn) {
-      addCatBtn.onclick = () => {
-        const dialog = document.getElementById('addCategoryDialog');
-        document.getElementById('categoryName').value = '';
-        document.getElementById('categoryColor').value = '#c8e6c9'; 
-        dialog.showModal();
-      };
-    }
-    const saveCatBtn = document.getElementById('saveCategory');
-    if (saveCatBtn) {
-      saveCatBtn.onclick = () => {
-        this.handleCreateCategory();
-      };
-    }
-
     // セルクリックでダイアログ表示（イベント委譲）
     document.getElementById('trackerBody').addEventListener('click', (e) => {
       // 各日付マス用のダイアログ表示
@@ -123,46 +108,47 @@ class HabitTracker {
       }
       // カテゴリの編集用ダイアログ表示
       if (e.target.classList.contains('sticky-col') && e.target.parentElement.classList.contains('category-row')) {
-        this.openCategoryEditDialog(e.target); // 名前編集用
+        this.openCategoryEditDialog(e.target);
       }
-      // カテゴリ内項目の名称変更用ダイアログ表示
+      // カテゴリ内リスト項目の編集用ダイアログ表示
       if (e.target.classList.contains('sticky-col') && !e.target.parentElement.classList.contains('category-row')) {
-        this.openItemEditDialog(e.target); // 名前編集用
+        this.openItemEditDialog(e.target);
       }
-      // 各カテゴリ内項目の新規追加用ダイアログ表示
+      // 各カテゴリ内リスト項目の新規追加用ダイアログ表示
       if (e.target.classList.contains('add-item-btn')) {
-        this.openAddItemDialog(e.target.dataset.catId);
+        const { catId } = e.target.dataset;
+        this.currentEditingCatId = catId;
+        const dialog = document.getElementById('additemDialog');
+        document.getElementById('addItemName').value = '';
+        dialog.showModal();
       }
     });
+
+    // カテゴリの新規追加用ダイアログ表示
+    if (addCatBtn) {
+      addCatBtn.onclick = () => {
+        const dialog = document.getElementById('addCategoryDialog');
+        document.getElementById('categoryName').value = '';
+        document.getElementById('categoryColor').value = '#c8e6c9'; 
+        dialog.showModal();
+      };
+    }
+    // カテゴリ追加ボタンクリックイベント
+    const saveCatBtn = document.getElementById('saveCategory');
+    if (saveCatBtn) {
+      saveCatBtn.onclick = () => {
+        this.handleCreateCategory();
+      };
+    }
+    // 各カテゴリ内リスト項目の新規追加用ダイアログ内：追加ボタンクリックイベント
+    const saveItemAddBtn = document.getElementById('saveItemAdd');
+    if (saveItemAddBtn) {
+      saveItemAddBtn.onclick = () => this.handleCreateItem();
+    }
 
     this.saveSettings();
     this.renderMatrix();
   }
-
-    handleCreateCategory() {
-      const nameInput = document.getElementById('categoryName');
-      const colorInput = document.getElementById('categoryColor');
-      const name = nameInput.value.trim();
-      const color = colorInput.value;
-
-      if (!name) {
-        alert("カテゴリ名を入力してください");
-        return;
-      }
-
-      const newCategory = {
-        id: `cat_${Date.now()}`,
-        name: name,
-        color: color,
-        items: []
-      };
-
-      this.settings.categories.push(newCategory);
-      this.saveSettings();
-      this.renderMatrix();
-
-      document.getElementById('addCategoryDialog').close();
-    }
 
     openEditDialog(target) {
       const { date, item } = target.dataset;
@@ -312,22 +298,49 @@ class HabitTracker {
         this.renderMatrix();
       }
 
-    openAddItemDialog(catId) {
-      const newName = prompt("新しいTODO項目の名前を入力してください");
-      if (!newName) return;
+    handleCreateCategory() {
+      const nameInput = document.getElementById('categoryName');
+      const colorInput = document.getElementById('categoryColor');
+      const name = nameInput.value.trim();
+      const color = colorInput.value;
 
-      // カテゴリを特定
-      const category = this.settings.categories.find(c => c.id === catId);
-      
-      // 新しい項目を作成
-      const newItem = {
-          id: `item_${Date.now()}`, // 重複しないIDを生成
-          name: newName
+      if (!name) {
+        alert("カテゴリ名を入力してください");
+        return;
+      }
+
+      const newCategory = {
+        id: `cat_${Date.now()}`,
+        name: name,
+        color: color,
+        items: []
       };
-
-      category.items.push(newItem); // 配列の末尾に追加
+      this.settings.categories.push(newCategory);
       this.saveSettings();
       this.renderMatrix();
+      document.getElementById('addCategoryDialog').close();
+    }
+
+    handleCreateItem() {
+      const nameInput = document.getElementById('addItemName');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        alert("項目名を入力してください");
+        return;
+      }
+
+      const category = this.settings.categories.find(c => c.id === this.currentEditingCatId);
+      if (category) {
+        const newItem = {
+          id: `item_${Date.now()}`,
+          name: name
+        };
+        category.items.push(newItem);
+        this.saveSettings();
+        this.renderMatrix();
+        document.getElementById('additemDialog').close();
+      }
     }
 
   /**
