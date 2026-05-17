@@ -1,31 +1,33 @@
-// 1. 初期データ定義 (本来は外部JSONから取得する想定)
+// 初期データ定義 (本来は外部JSONから取得する想定)
+const now = new Date();
+const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 const initialSettings = {
-  year: 2026,
-  month: 5,
+  year: now.getFullYear(),
+  month: now.getMonth() + 1,
   categories: [
     {
-      id: "cat_morning", name: "朝", color: "#fff9c4",
+      id: "cat_sample", 
+      name: "例)健康習慣", 
+      color: "#c8e6c9",
       items: [
-        { id: "m1", name: "早起き：定時に起きれた" },
-        { id: "m2", name: "朝ごはんを食べられた" }
-      ]
-    },
-    {
-      id: "cat_noon", name: "昼", color: "#c8e6c9",
-      items: [
-        { id: "n1", name: "散歩に行けた" },
-        { id: "n2", name: "昼ごはんを食べられた" },
+        { id: "item_sample", name: "例)コップ1杯の水を飲む" }
       ]
     }
   ]
 };
+const initialLogs = {
+  [todayKey]: {
+    "item_sample": { status: true, memo: "サンプル記録です" }
+  }
+};
 
 class HabitTracker {
-  constructor(initialSettings) {
-    this.settings = JSON.parse(localStorage.getItem('habit_settings')) || initialSettings;
-    this.logs = JSON.parse(localStorage.getItem('habit_logs')) || {};
+  constructor(initialSettings, initialLogs = {}) {
+    this.settings = JSON.parse(localStorage.getItem('habit_settings')) ?? initialSettings;
+    this.logs = JSON.parse(localStorage.getItem('habit_logs')) ?? initialLogs;
     this.currentEditingItemId = null;
     this.currentEditingCatId = null;
+    this.editingMemoKey = null;
     this.init();
   }
 
@@ -37,31 +39,42 @@ class HabitTracker {
     this.renderHeader();
     this.renderMatrix();
     this.bindEvents();
-    this.closeDialog();
   }
 
   // カレンダーの列（1日〜末日）を生成
   renderHeader() {
-    const headerRow = document.getElementById('dateHeader');
-    const daysInMonth = new Date(this.settings.year, this.settings.month, 0).getDate();
+    const { year, month } = this.settings;
+    const daysInMonth = new Date(year, month, 0).getDate();
     const today = new Date();
-    
-    let html = `<th class="sticky-col">${this.settings.month}月</th>`;
+    // カレンダー上外の年月の表示更新（currentYearMonthDisplay）
+    const currentYearMonthDisplay = document.getElementById('currentYearMonthDisplay');
+    if (currentYearMonthDisplay) {
+      currentYearMonthDisplay.textContent = `${year}年-${month}月`;
+    }
+    // カレンダー上内の年の表示更新（currentYearDisplay）
+    const currentYearDisplay = document.getElementById('currentYearDisplay');
+    if (currentYearDisplay) {
+      currentYearDisplay.textContent = `${year}年`;
+    }
+    const headerRow = document.getElementById('dateHeader');
+    let html = `<th class="sticky-col memo-trigger" data-memo-type="monthly">${month}月</th>`;  // カレンダー上内の月
     for (let d = 1; d <= daysInMonth; d++) {
       const isToday = (
-        this.settings.year === today.getFullYear() && 
-        this.settings.month === (today.getMonth() + 1) && 
+        year === today.getFullYear() && 
+        month === (today.getMonth() + 1) && 
         d === today.getDate()
       );
-      html += `<th class="${isToday ? 'is-today' : ''}">${d}</th>`;
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      html += `<th class="${isToday ? 'is-today' : ''} memo-trigger" data-memo-type="daily" data-date="${dateStr}">${d}</th>`;
     }
     headerRow.innerHTML = html;
   }
 
-  // マトリックス本体の生成
+  // カレンダーのマトリックス本体の生成
   renderMatrix() {
+    const { year, month } = this.settings;
+    const daysInMonth = new Date(year, month, 0).getDate();
     const body = document.getElementById('trackerBody');
-    const daysInMonth = new Date(this.settings.year, this.settings.month, 0).getDate();
     let html = '';
 
     this.settings.categories.forEach(cat => {
@@ -81,7 +94,7 @@ class HabitTracker {
                   <td class="sticky-col" data-item-id="${item.id}" data-cat-id="${cat.id}">${item.name}</td>`;
         for (let d = 1; d <= daysInMonth; d++) {
           const dateKey = `${this.settings.year}-${String(this.settings.month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-          const logEntry = this.logs[dateKey]?.[item.id];
+          const logEntry = this.logs?.[dateKey]?.[item.id];
           const status = (logEntry && typeof logEntry === 'object') ? logEntry.status : (logEntry ?? 'none');
           html += `<td>
                     <div 
@@ -99,7 +112,7 @@ class HabitTracker {
   }
 
   bindEvents() {
-    const addCatBtn = document.querySelector('.add-category-item-btn button');
+    const addCatBtn = document.querySelector('.add-category-item-btn');
     // セルクリックでダイアログ表示（イベント委譲）
     document.getElementById('trackerBody').addEventListener('click', (e) => {
       // 各日付マス用のダイアログ表示
@@ -133,7 +146,7 @@ class HabitTracker {
         dialog.showModal();
       };
     }
-    // カテゴリ追加ボタンクリックイベント
+    // カテゴリの新規追加用ダイアログ内：追加ボタンクリックイベント
     const saveCatBtn = document.getElementById('saveCategory');
     if (saveCatBtn) {
       saveCatBtn.onclick = () => {
@@ -145,14 +158,87 @@ class HabitTracker {
     if (saveItemAddBtn) {
       saveItemAddBtn.onclick = () => this.handleCreateItem();
     }
+    // 全データ削除リセット用ダイアログ表示
+    const dataResetBtn = document.querySelector('.all-data-reset-btn');
+    if (dataResetBtn) {
+      dataResetBtn.onclick = () => {
+        const dialog = document.getElementById('allDataResetDialog');
+        document.getElementById('resetText').value = '';
+        dialog.showModal();
+      };
+    }
+    // 全データ削除リセット用ダイアログ内：削除ボタンクリックイベント
+    const confirmInput = document.getElementById('resetText');
+    const finalDeleteBtn = document.getElementById('resetData');
+    confirmInput.addEventListener('input', (e) => {
+      finalDeleteBtn.disabled = (e.target.value !== "すべて削除");
+    });
+    if (finalDeleteBtn) {
+      finalDeleteBtn.onclick = () => this.resetAllData();
+    }
+    // 備考メモの共通ダイアログ表示
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('.memo-trigger');
+      if (!trigger) return;
 
-    this.saveSettings();
-    this.renderMatrix();
+      const type = trigger.dataset.memoType; // yearly, monthly, global, daily
+      const date = trigger.dataset.date;     // dailyの場合のみ取得
+
+      this.openMemoModal(type, date);
+    });
+    // 備考メモの共通ダイアログ内：保存ボタンクリックイベント
+    const saveBtn = document.getElementById('saveMemo');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        this.saveMemoData();
+      });
+    }
+    // TODO（削除予定）: テスト用ダイアログ表示
+    // const btn = document.querySelector('.class-name-btn');
+    // if (btn) {
+    //   btn.onclick = () => {
+    //     const dialog = document.getElementById('nameDialog');
+    //     document.getElementById('inputName').value = '';
+    //     dialog.showModal();
+    //   };
+    // }
+
+    // 月切り替えボタンクリックイベント
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+    prevBtn.onclick = () => this.changeMonth(-1);
+    nextBtn.onclick = () => this.changeMonth(1);
+
+    // モーダルを閉じる処理
+    const modals = document.querySelectorAll('dialog');
+    const bodyContent = document.querySelector('body');
+    if (!modals || !bodyContent) return;
+    modals.forEach(modal => {
+      // 閉じた時の処理
+      modal.addEventListener('close', () => {
+        bodyContent.style.overflow = 'visible';
+      });
+      // 黒背景部分の押下
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) modal.close();
+      });
+      // ×印ボタンの押下
+      const closeBtn = modal.querySelector('.modal-close-icon-button');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => modal.close());
+      }
+    });
   }
 
     openEditDialog(target) {
       const { date, item } = target.dataset;
       const dialog = document.getElementById('statusDialog');
+
+      // 該当マスのタイトル日付表示更新（selectDayInStatusDialog）
+      const selectDayDisplay = document.getElementById('selectDayInStatusDialog');
+      if (selectDayDisplay) {
+        selectDayDisplay.textContent = `${date.replaceAll('-', '/')}`;
+      }
 
       const logEntry = this.logs[date]?.[item];
       const currentStatus = (logEntry && typeof logEntry === 'object') ? String(logEntry.status) : String(logEntry ?? 'none');
@@ -343,32 +429,88 @@ class HabitTracker {
       }
     }
 
-  /**
-   * モーダルを閉じる処理：
-   * モーダルカード内の「右上×印ボタン・モーダルカード外の黒背景部分・最下部の閉じるボタン」の押下でモーダルが閉じる。
-  */
-  closeDialog = () => {
-    const modals = document.querySelectorAll('dialog');
-    const bodyContent = document.querySelector('body');
-    if (!modals || !bodyContent) return;
+    resetAllData() {
+      if (!confirm("本当にすべてのデータを削除してもよろしいですか？")) return;
+      // localStorage.clear();
+      localStorage.removeItem('habit_settings');
+      localStorage.removeItem('habit_logs');
+      localStorage.removeItem('habit_memos');
+      location.reload();
+    }
 
-    modals.forEach(modal => {
-      // モーダルを閉じた時の処理
-      modal.addEventListener('close', () => {
-        bodyContent.style.overflow = 'visible';
-      });
-      // 黒背景部分の押下でモーダルを閉じる処理
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal) modal.close();
-      });
-      // ×印ボタンの押下でモーダルを閉じる処理
-      const closeBtn = modal.querySelector('.modal-close-icon-button');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => modal.close());
+    openMemoModal(type, date) {
+      const { year, month } = this.settings;
+      let storageKey = '';
+      let labelText = '';
+
+      switch (type) {
+        case 'global':
+          storageKey = 'global';
+          labelText = '「全体」のメモ';
+          break;
+        case 'yearly':
+          storageKey = `year-${year}`;
+          labelText = `「${year}年」のメモ`;
+          break;
+        case 'monthly':
+          storageKey = `month-${year}-${month}`;
+          labelText = `「${year}年 ${month}月」のメモ`;
+          break;
+        case 'daily':
+          storageKey = `day-${date}`;
+          labelText = `「${date.replaceAll('-', '/')}」のメモ`;
+          break;
       }
-    });
-  };
+
+      this.editingMemoKey = storageKey;
+
+      const dialog = document.getElementById('memosCommonDialog');
+      const label = dialog.querySelector('label[for="memoInput"]');
+      const textarea = document.getElementById('memoInput');
+
+      label.textContent = `↓ ${labelText} ↓`;
+
+      const allMemos = JSON.parse(localStorage.getItem('habit_memos')) || {};
+      textarea.value = allMemos[storageKey] || '';
+
+      dialog.showModal();
+    }
+
+    saveMemoData() {
+      if (!this.editingMemoKey) return;
+      const textarea = document.getElementById('memoInput');
+      const updatedText = textarea.value.trim();
+      const allMemos = JSON.parse(localStorage.getItem('habit_memos')) || {};
+
+      if (updatedText === '') {
+        delete allMemos[this.editingMemoKey];
+      } else {
+        allMemos[this.editingMemoKey] = updatedText;
+      }
+
+      localStorage.setItem('habit_memos', JSON.stringify(allMemos));
+
+      this.editingMemoKey = null;
+      const dialog = document.getElementById('memosCommonDialog');
+      dialog.close();
+    }
+
+    changeMonth(offset) {
+      this.settings.month += offset;
+      if (this.settings.month > 12) {
+        this.settings.month = 1;
+        this.settings.year++;
+      } else if (this.settings.month < 1) {
+        this.settings.month = 12;
+        this.settings.year--;
+      }
+
+      this.saveSettings();
+      this.renderHeader();
+      this.renderMatrix();
+    }
+
 }
 
 // 実行
-const app = new HabitTracker(initialSettings);
+const app = new HabitTracker(initialSettings, initialLogs);

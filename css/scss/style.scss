@@ -4,6 +4,18 @@ $color-grayout: #757575;
 $cell-width: 40px;
 $label-width: 200px;
 
+@mixin hover-state(
+  $border-radius: 8px,
+) {
+  &:hover {
+    background: rgb(255, 221, 128, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: $border-radius;
+    transition: all 0.2s ease;
+  }
+}
+
 $header-height: 80px;
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -28,11 +40,23 @@ body {
       margin-block: 8px;
       > button {
         &#prevMonth, &#nextMonth {
+          font-weight: bold;
           cursor: pointer;
         }
+        &#prevMonth {
+          border-radius: 8px 0 0 8px;
+          @include hover-state(8px 0 0 8px);
+        }
+        &#nextMonth {
+          border-radius: 0 8px 8px 0;
+          @include hover-state(0 8px 8px 0);
+        }
       }
-      > #currentMonthDisplay {
-        padding-inline: 16px;
+      > #currentYearMonthDisplay {
+        padding-inline: 8px;
+      }
+      @media (max-width: 768px) {
+        margin-inline: auto;
       }
     }
     > .matrix-wrapper {
@@ -40,6 +64,31 @@ body {
       background: #eee;
       border: 4px solid $color-border;
       border-radius: 16px;
+      > .table-inside-up-field {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 10px;
+        > #currentYearDisplay {
+          font-size: 1.25rem;
+          cursor: pointer;
+          @include hover-state;
+        }
+        > .overall-notes-btn-field {
+          > button {
+            cursor: pointer;
+            &.overall-notes {
+              appearance: none;
+              background: none;
+              border: none;
+              text-decoration: underline;
+              margin-inline: 8px;
+              padding: 0;
+              @include hover-state(0px);
+            }
+          }
+        }
+      }
       > .matrix-inner {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -58,11 +107,6 @@ body {
           text-align: center;
           width: $cell-width;
           height: 40px;
-        }
-
-        // 今日の日付ハイライト
-        .is-today {
-          background: yellow;
         }
 
         // 左側の項目列を固定
@@ -84,8 +128,10 @@ body {
             content: '';
             position: absolute;
             right: 0; top: 0; bottom: 0;
-            width: 2px; background: #999;
+            width: 2px;
+            background: #999;
           }
+          @include hover-state(0px);
         }
 
         // カテゴリ行（朝・昼・夜）
@@ -120,6 +166,16 @@ body {
           }
         }
 
+        // 今日の日付ハイライト
+        .is-today {
+          background: yellow;
+        }
+
+        // カレンダー上部の月・日付マス(クリックに気づかせる用のホバー)
+        .memo-trigger {
+          @include hover-state(0px);
+        }
+
         // マス目の状態
         .cell-btn {
           width: 100%;
@@ -130,18 +186,33 @@ body {
           &[data-status="false"]::before { content: "×"; font-size: 1.5rem; }
           &[data-status="none"] { background: #e0e0e0; }
           &[data-status="undefined"] { background: #e0e0e0; }
+          @include hover-state(0px);
         }
       }
     }
-    > .add-category-item-btn {
+    > .table-outside-bottom-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
       margin-block: 10px;
       > button {
-        padding: 8px 16px;
-        border: 1px solid #888;
-        border-radius: 16px;
         cursor: pointer;
-        > span {
-          padding-right: 4px;
+        &.add-category-item-btn {
+          padding: 8px 16px;
+          border: 1px solid #888;
+          border-radius: 16px;
+          > span {
+            padding-right: 4px;
+          }
+          @include hover-state();
+        }
+        &.all-data-reset-btn {
+          appearance: none;
+          background: none;
+          border: none;
+          text-decoration: underline;
+          margin-inline: 8px;
+          padding: 0;
         }
       }
     }
@@ -281,6 +352,41 @@ body {
               }
             }
           }
+          &.modal-body-reset-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-inline: auto;
+            margin-block: 32px 40px;
+            label {
+              font-weight: bolder;
+              margin-bottom: 10px;
+            }
+            input[type="text"] {
+              border: 2px solid #444444;
+              border-radius: 8px;
+              width: 16rem;
+              padding: 4px 8px;
+            }
+          }
+          &.modal-body-memo-textarea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-inline: auto;
+            margin-block: 32px 40px;
+            label {
+              font-weight: bolder;
+              margin-bottom: 10px;
+            }
+            textarea {
+              border: 2px solid #444444;
+              border-radius: 8px;
+              width: 16rem;
+              height: 8rem;
+              padding: 4px 8px;
+            }
+          }
 
           &.dialog-btns {
             display: flex;
@@ -299,6 +405,23 @@ body {
               &:hover {
                 background: #ccc;
                 transition: background 0.2s;
+              }
+              &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                pointer-events: none;
+              }
+              &.btn-color {
+                &--red {
+                  color: #fff;
+                  background: #d32f2f;
+                  font-size: 1.25rem;
+                  letter-spacing: 0.08em;
+                }
+                &--orange {
+                  color: black;
+                  background: orange;
+                }
               }
             }
           }

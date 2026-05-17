@@ -25,10 +25,16 @@
   <main id="app">
     <div class="monthly-change-field">
       <button id="prevMonth">＜</button>
-      <h2 id="currentMonthDisplay">2026年 5月</h2>
+      <h2 id="currentYearMonthDisplay"></h2>
       <button id="nextMonth">＞</button>
     </div>
     <div class="matrix-wrapper">
+      <div class="table-inside-up-field">
+        <h3 id="currentYearDisplay" class="memo-trigger" data-memo-type="yearly"></h3>
+        <div class="overall-notes-btn-field">
+          <button class="overall-notes memo-trigger" data-memo-type="global">全体メモ</button>
+        </div>
+      </div>
       <div class="matrix-inner">
         <table id="trackerTable">
           <thead>
@@ -42,8 +48,9 @@
         </table>
       </div>
     </div>
-    <div class="add-category-item-btn">
-      <button><span>+</span>カテゴリ追加</button>
+    <div class="table-outside-bottom-field">
+      <button class="add-category-item-btn"><span>+</span>カテゴリ追加</button>
+      <button class="all-data-reset-btn">全リセット</button>
     </div>
   </main>
 
@@ -52,8 +59,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="modal-title">
-          <!-- TODO: ◯/◯の更新というふうに表示 -->
-          <h3>項目の更新</h3>
+          <h3><span id="selectDayInStatusDialog"></span>の更新</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -236,6 +242,60 @@
         <hr>
         <div class="dialog-btns">
           <button type="button" id="saveCategory">追加</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 全データ削除リセット用のダイアログ -->
+  <dialog id="allDataResetDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>全データ削除</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="modal-body-reset-text">
+          <label for="resetText">↓「すべて削除」と入力してください↓</label>
+          <input type="text" id="resetText" class="reset-text-input">
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="resetData" class="btn-color--red" disabled>削除</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 備考メモの共通ダイアログ -->
+  <dialog id="memosCommonDialog">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3 id="modalTitle">メモ編集</h3>
+        </div>
+        <button type="button" class="modal-close-icon-button" aria-label="閉じる">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          </svg>
+        </button>
+      </div>
+      <hr class="modal-hr">
+      <div class="modal-body">
+        <div class="modal-body-memo-textarea">
+          <label for="memoInput">↓「2026年5月28日」のメモ↓</label>
+          <textarea id="memoInput" placeholder="メモを入力してください..."></textarea>
+        </div>
+        <hr>
+        <div class="dialog-btns">
+          <button type="button" id="saveMemo" class="btn-color--orange">保存</button>
         </div>
       </div>
     </div>
