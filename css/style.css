@@ -1,4 +1,31 @@
 @charset "UTF-8";
+body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea textarea, body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name input[type=text] {
+  border: 2px solid #444444;
+  border-radius: 8px;
+  width: 16rem;
+  padding: 4px 8px;
+}
+
+@keyframes fadeInDialogBackground {
+  from {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(1px);
+  }
+}
+@keyframes slideInDownModalCard {
+  from {
+    opacity: 0.5;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   html {
     interpolate-size: allow-keywords;
@@ -28,6 +55,11 @@ body > main > .monthly-change-field {
   width: -moz-fit-content;
   width: fit-content;
   margin-block: 8px;
+}
+@media screen and (max-width: 768px) {
+  body > main > .monthly-change-field {
+    margin-inline: auto;
+  }
 }
 body > main > .monthly-change-field > button#prevMonth, body > main > .monthly-change-field > button#nextMonth {
   font-weight: bold;
@@ -61,13 +93,11 @@ body > main > .monthly-change-field > .month-picker-wrapper > span > input[id=cu
 body > main > .monthly-change-field > .month-picker-wrapper > #currentYearMonthDisplay {
   padding-inline: 8px;
 }
-@media screen and (max-width: 768px) {
-  body > main > .monthly-change-field {
-    margin-inline: auto;
-  }
-}
 body > main > .matrix-wrapper {
   padding: 20px;
+  background: #eee;
+  border: 4px solid #888;
+  border-radius: 16px;
 }
 @media screen and (max-width: 768px) {
   body > main > .matrix-wrapper {
@@ -78,11 +108,6 @@ body > main > .matrix-wrapper {
   body > main > .matrix-wrapper {
     padding-inline: 12px;
   }
-}
-body > main > .matrix-wrapper {
-  background: #eee;
-  border: 4px solid #888;
-  border-radius: 16px;
 }
 body > main > .matrix-wrapper > .table-inside-up-field {
   display: flex;
@@ -102,9 +127,6 @@ body > main > .matrix-wrapper > .table-inside-up-field > #currentYearDisplay:hov
   border-radius: 8px;
   transition: all 0.2s ease;
 }
-body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-field > button {
-  cursor: pointer;
-}
 body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-field > button.overall-notes {
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -114,6 +136,7 @@ body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-fiel
   text-decoration: underline;
   margin-inline: 8px;
   padding: 0;
+  cursor: pointer;
 }
 body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-field > button.overall-notes:hover {
   background: rgba(255, 221, 128, 0.8);
@@ -258,6 +281,14 @@ body > main > .table-outside-bottom-field {
   align-items: end;
   margin-block: 10px;
 }
+@media screen and (max-width: 768px) {
+  body > main > .table-outside-bottom-field {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    margin-top: 16px;
+  }
+}
 body > main > .table-outside-bottom-field > button {
   cursor: pointer;
 }
@@ -286,14 +317,6 @@ body > main > .table-outside-bottom-field > button.all-data-reset-btn {
   margin-inline: 8px;
   padding: 0;
 }
-@media screen and (max-width: 768px) {
-  body > main > .table-outside-bottom-field {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    margin-top: 16px;
-  }
-}
 body > dialog {
   padding: 0;
   border: none;
@@ -314,16 +337,6 @@ body > dialog[open] {
   backdrop-filter: blur(4px);
   animation: fadeInDialogBackground 0.4s ease forwards;
 }
-@keyframes fadeInDialogBackground {
-  from {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-  }
-  to {
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(1px);
-  }
-}
 @media screen and (max-width: 576px) {
   body > dialog[open]#categoryEditDialog > .modal-card, body > dialog[open]#itemEditDialog > .modal-card {
     width: 80svw;
@@ -333,28 +346,16 @@ body > dialog[open] {
 body > dialog[open] > .modal-card {
   background: #fff;
   width: max(400px, 40svw);
-}
-@media screen and (max-width: 576px) {
-  body > dialog[open] > .modal-card {
-    width: 90svw;
-    opacity: 0.95;
-  }
-}
-body > dialog[open] > .modal-card {
   height: auto;
   margin-block: 16svh auto;
   margin-inline: auto;
   border-radius: 8px;
   animation: slideInDownModalCard 0.8s ease-out forwards;
 }
-@keyframes slideInDownModalCard {
-  from {
-    opacity: 0.5;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media screen and (max-width: 576px) {
+  body > dialog[open] > .modal-card {
+    width: 90svw;
+    opacity: 0.95;
   }
 }
 body > dialog[open] > .modal-card > .modal-header {
@@ -385,7 +386,7 @@ body > dialog[open] > .modal-card > .modal-header > .modal-close-icon-button:hov
 body > dialog[open] > .modal-card > .modal-hr {
   width: 96%;
   margin-inline: auto;
-  border: 1px solid #404040;
+  border: 1px solid #444444;
 }
 body > dialog[open] > .modal-card > .modal-body div {
   margin-block: 24px;
@@ -426,12 +427,6 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name, body >
 body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name label, body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name label {
   font-weight: bolder;
 }
-body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name input[type=text] {
-  border: 2px solid #444444;
-  border-radius: 8px;
-  width: 16rem;
-  padding: 4px 8px;
-}
 body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns {
   display: flex;
   justify-content: center;
@@ -470,12 +465,6 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text label 
   font-weight: bolder;
   margin-bottom: 10px;
 }
-body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text input[type=text] {
-  border: 2px solid #444444;
-  border-radius: 8px;
-  width: 16rem;
-  padding: 4px 8px;
-}
 body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea {
   display: flex;
   flex-direction: column;
@@ -488,11 +477,7 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea lab
   margin-bottom: 10px;
 }
 body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea textarea {
-  border: 2px solid #444444;
-  border-radius: 8px;
-  width: 16rem;
   height: 8rem;
-  padding: 4px 8px;
 }
 body > dialog[open] > .modal-card > .modal-body div.dialog-btns {
   display: flex;

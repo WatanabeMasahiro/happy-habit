@@ -1,15 +1,32 @@
+// ==========================================
+// 1. 変数定義 (Variables)
+// ==========================================
 $color-border: #888;
+$color-border-dark: #444444;
 $color-today: #ffeb3b;
 $color-grayout: #757575;
+$color-bg-dark: #555;
+$color-bg-light: #eee;
+$color-white: #fff;
+
+// テーマカラー・アクセント
+$color-accent: orange;
+$color-accent-light: rgb(255, 208, 120);
+$color-hover-yellow: rgb(255, 221, 128, 0.8);
+$color-danger: #d32f2f;
+
+// サイズ管理
 $cell-width: 40px;
 $cell-height: 40px;
 $label-width: 200px;
+$header-height: 80px;
 
-@mixin hover-state(
-  $border-radius: 8px,
-) {
+// ==========================================
+// 2. ミックスイン & プレースホルダー
+// ==========================================
+@mixin hover-state($border-radius: 8px) {
   &:hover {
-    background: rgb(255, 221, 128, 0.8);
+    background: $color-hover-yellow;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: $border-radius;
@@ -17,12 +34,21 @@ $label-width: 200px;
   }
 }
 
+// モーダル内の入力フォーム共通スタイル
+%form-input-base {
+  border: 2px solid $color-border-dark;
+  border-radius: 8px;
+  width: 16rem;
+  padding: 4px 8px;
+}
+
 // メディアクエリ
 $breakpoints: (
-  'sm': 576px,   // 480~576px   スマホ
-  'md': 768px,   // 768px       タブレット（主戦場）
-  'lg': 1200px,  // 1024~1200px ノートPC / デスクトップ
+  'sm': 576px,
+  'md': 768px,
+  'lg': 1200px,
 ) !default;
+
 @mixin media-query($breakpoint-name) {
   $width: map-get($breakpoints, $breakpoint-name);
   @if $width {
@@ -34,7 +60,22 @@ $breakpoints: (
   }
 }
 
-$header-height: 80px;
+// ==========================================
+// 3. アニメーション定義 (最外殻に配置)
+// ==========================================
+@keyframes fadeInDialogBackground {
+  from { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); }
+  to { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(1px); }
+}
+
+@keyframes slideInDownModalCard {
+  from { opacity: 0.5; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ==========================================
+// 4. ベース・レイアウト (Base & Layout)
+// ==========================================
 @media (prefers-reduced-motion: no-preference) {
   html {
     interpolate-size: allow-keywords;
@@ -50,14 +91,18 @@ body {
       margin-block: 24px;
     }
   }
+
   > main {
     margin-inline: 24px;
     @include media-query('md') { margin-inline: 20px; }
     @include media-query('sm') { margin-inline: 16px; }
+
     > .monthly-change-field {
       display: flex;
       width: fit-content;
       margin-block: 8px;
+      @include media-query('md') { margin-inline: auto; }
+
       > button {
         &#prevMonth, &#nextMonth {
           font-weight: bold;
@@ -72,11 +117,12 @@ body {
           @include hover-state(0 8px 8px 0);
         }
       }
+
       > .month-picker-wrapper {
         > span {
           > input[id=currentYearMonth] {
-            background: #555;
-            color: #fff;
+            background: $color-bg-dark;
+            color: $color-white;
             font-weight: bolder;
           }
         }
@@ -84,69 +130,68 @@ body {
           padding-inline: 8px;
         }
       }
-      @include media-query('md') {
-        margin-inline: auto;
-      }
-      // @media (max-width: 768px) {
-      //   margin-inline: auto;
-      // }
     }
+
     > .matrix-wrapper {
       padding: 20px;
-      @include media-query('md') { padding-inline: 16px; }
-      @include media-query('sm') { padding-inline: 12px; }
-      background: #eee;
+      background: $color-bg-light;
       border: 4px solid $color-border;
       border-radius: 16px;
+      @include media-query('md') { padding-inline: 16px; }
+      @include media-query('sm') { padding-inline: 12px; }
+
       > .table-inside-up-field {
         display: flex;
         justify-content: space-between;
         align-items: start;
         margin-bottom: 10px;
         margin-inline: 8px;
+
         > #currentYearDisplay {
           font-size: 1.25rem;
           cursor: pointer;
           @include hover-state;
         }
+
         > .overall-notes-btn-field {
-          > button {
+          > button.overall-notes {
+            appearance: none;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            margin-inline: 8px;
+            padding: 0;
             cursor: pointer;
-            &.overall-notes {
-              appearance: none;
-              background: none;
-              border: none;
-              text-decoration: underline;
-              margin-inline: 8px;
-              padding: 0;
-              @include hover-state(0px);
-            }
+            @include hover-state(0px);
           }
         }
       }
+
       > .matrix-inner {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         border: 2px solid $color-border;
         border-radius: 4px;
         margin-inline: auto;
+
         table {
-          background: #fff;
+          background: $color-white;
           border-collapse: collapse;
           table-layout: fixed;
           width: 100%;
         }
+
         th, td {
           border: 1px solid $color-border;
           text-align: center;
           width: $cell-width;
           height: $cell-height;
         }
-        // 左側の項目列を固定
+
         .sticky-col {
           position: sticky;
           left: 0;
-          background: #fff;
+          background: $color-white;
           width: $label-width;
           z-index: 0;
           text-align: left;
@@ -154,9 +199,8 @@ body {
           overflow-wrap: anywhere;
           word-break: normal;
           line-break: strict;
-          &:not(th) {
-            cursor: pointer;
-          }
+          
+          &:not(th) { cursor: pointer; }
           &::after {
             content: '';
             position: absolute;
@@ -166,7 +210,7 @@ body {
           }
           @include hover-state(0px);
         }
-        // カテゴリ行（朝・昼・夜）
+
         .category-row {
           font-weight: bold;
           td {
@@ -177,50 +221,21 @@ body {
                 display: inline-block;
                 margin-right: 32px;
                 pointer-events: none;
-                // ▼将来的な長文対策用(一行ver)
-                // max-width: 150px;
-                // overflow: hidden;
-                // text-overflow: ellipsis;
-                // white-space: nowrap;
-                // ▼将来的な長文対策用(複数行ver)
-                // display: -webkit-box;
-                // -webkit-box-orient: vertical;
-                // -webkit-line-clamp: 2;
-                // overflow: hidden;
               }
               > .add-item-btn {
                 position: absolute;
                 right: 8px;
-                border: 2px solid #888;
+                border: 2px solid $color-border;
                 border-radius: 8px;
                 cursor: pointer;
               }
             }
-            // &[colspan] {
-            //   // text-align: start;
-            //   // padding-left: 20px;
-            //   // > .updown-btn, > .bgcolor-select-btn {
-            //   //   font-size: 0.75rem;
-            //   //   font-weight: normal;
-            //   //   border: 1px solid #888;
-            //   //   border-radius: 16px;
-            //   //   cursor: pointer;
-            //   //   &:not(:last-child) {
-            //   //     margin-right: 8px;
-            //   //   }
-            //   // }
-            // }
           }
         }
-        // 今日の日付ハイライト
-        .is-today {
-          background: yellow;
-        }
-        // カレンダー上部の月・日付マス(クリックに気づかせる用のホバー)
-        .memo-trigger {
-          @include hover-state(0px);
-        }
-        // マス目の状態
+
+        .is-today { background: yellow; }
+        .memo-trigger { @include hover-state(0px); }
+
         .cell-btn {
           width: 100%;
           height: 100%;
@@ -232,9 +247,9 @@ body {
           &[data-status="undefined"] { background: #cfcfcf; }
           @include hover-state(0px);
         }
+
         @include media-query('sm') {
           font-size: 0.75rem;
-          table {}
           th, td {
             width: $cell-width - 8px;
             height: $cell-height - 6px;
@@ -243,40 +258,34 @@ body {
             width: $label-width - 80px;
             padding-inline: 8px;
           }
-          .category-row {
-            td {
-              &.category-title {
-                padding: 6px;
-                > .title {
-                  margin-right: 28px;
-                }
-                // > .add-item-btn {}
-              }
-            }
+          .category-row td.category-title {
+            padding: 6px;
+            > .title { margin-right: 28px; }
           }
-          // .is-today {}
-          // .memo-trigger {}
-          .cell-btn {
-            line-height: $cell-height - 6px;
-          }
-
+          .cell-btn { line-height: $cell-height - 6px; }
         }
       }
     }
+
     > .table-outside-bottom-field {
       display: flex;
       justify-content: space-between;
       align-items: end;
       margin-block: 10px;
+      @include media-query('md') {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        margin-top: 16px;
+      }
+
       > button {
         cursor: pointer;
         &.add-category-item-btn {
           padding: 8px 16px;
-          border: 1px solid #888;
+          border: 1px solid $color-border;
           border-radius: 16px;
-          > span {
-            padding-right: 4px;
-          }
+          > span { padding-right: 4px; }
           @include hover-state();
         }
         &.all-data-reset-btn {
@@ -288,16 +297,12 @@ body {
           padding: 0;
         }
       }
-      @include media-query('md') {
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
-        margin-top: 16px;
-      }
     }
   }
 
-
+  // ==========================================
+  // 5. ダイアログ・モーダル (Dialog & Modal)
+  // ==========================================
   > dialog {
     padding: 0;
     border: none;
@@ -318,10 +323,7 @@ body {
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(4px);
     animation: fadeInDialogBackground 0.4s ease forwards;
-    @keyframes fadeInDialogBackground {
-      from { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); }
-      to { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(1px); }
-    }
+
     &#categoryEditDialog, &#itemEditDialog {
       > .modal-card {
         @include media-query('sm') {
@@ -332,21 +334,18 @@ body {
     }
 
     > .modal-card {
-      background: #fff;
+      background: $color-white;
       width: max(400px, 40svw);
-      @include media-query('sm') {
-        width: 90svw;
-        opacity: 0.95;
-      }
       height: auto;
       margin-block: 16svh auto;
       margin-inline: auto;
       border-radius: 8px;
       animation: slideInDownModalCard 0.8s ease-out forwards;
-      @keyframes slideInDownModalCard {
-        from { opacity: 0.5; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+      @include media-query('sm') {
+        width: 90svw;
+        opacity: 0.95;
       }
+
       > .modal-header {
         position: relative;
         > .modal-title {
@@ -355,12 +354,9 @@ body {
           align-items: center;
           padding-top: 24px;
           padding-bottom: 16px;
-          h3 {
-            text-align: center;
-            width: 80%;
-          }
+          h3 { text-align: center; width: 80%; }
         }
-        >.modal-close-icon-button {
+        > .modal-close-icon-button {
           position: absolute;
           top: 8px;
           right: 16px;
@@ -372,14 +368,17 @@ body {
           }
         }
       }
+
       > .modal-hr {
         width: 96%;
         margin-inline: auto;
-        border: 1px solid #404040;
+        border: 1px solid $color-border-dark;
       }
+
       > .modal-body {
         div {
           margin-block: 24px;
+
           &.modal-body-select {
             display: flex;
             justify-content: center;
@@ -391,20 +390,13 @@ body {
             flex-direction: column;
             width: 50%;
             margin-inline: auto;
-            > label {
-              font-weight: bolder;
-            }
-            > textarea {
-              border: 2px solid $color-border;
-              border-radius: 4px;
-            }
+            > label { font-weight: bolder; }
+            > textarea { border: 2px solid $color-border; border-radius: 4px; }
           }
           &.category-name-field {
             text-align: center;
             margin-block: 10px 0;
-            > #displayCatName {
-              font-weight: bold;
-            }
+            > #displayCatName { font-weight: bold; }
           }
           &.modal-body-item-name,
           &.modal-body-category-name {
@@ -412,15 +404,8 @@ body {
             flex-direction: column;
             width: fit-content;
             margin-inline: auto;
-            label {
-              font-weight: bolder;
-            }
-            input[type="text"] {
-              border: 2px solid #444444;
-              border-radius: 8px;
-              width: 16rem;
-              padding: 4px 8px;
-            }
+            label { font-weight: bolder; }
+            input[type="text"] { @extend %form-input-base; } // プレースホルダーを適用
           }
           &.modal-body-order-btns {
             display: flex;
@@ -429,21 +414,19 @@ body {
             gap: 40px;
             > button {
               line-height: 1;
-              color: #444444;
-              background: rgb(255, 208, 120);
-              border: 2px solid #444444;
+              color: $color-border-dark;
+              background: $color-accent-light;
+              border: 2px solid $color-border-dark;
               border-radius: 16px;
               padding: 0.5em 1.0em;
               cursor: pointer;
               &:hover {
-                background: orange;
+                background: $color-accent;
                 transition: background 0.2s;
               }
             }
           }
-          &.modal-body-category-color {
-            text-align: center;
-          }
+          &.modal-body-category-color { text-align: center; }
           &.modal-body-order-display {
             text-align: center;
             color: #333;
@@ -455,16 +438,8 @@ body {
             align-items: center;
             margin-inline: auto;
             margin-block: 32px 40px;
-            label {
-              font-weight: bolder;
-              margin-bottom: 10px;
-            }
-            input[type="text"] {
-              border: 2px solid #444444;
-              border-radius: 8px;
-              width: 16rem;
-              padding: 4px 8px;
-            }
+            label { font-weight: bolder; margin-bottom: 10px; }
+            input[type="text"] { @extend %form-input-base; } // プレースホルダーを適用
           }
           &.modal-body-memo-textarea {
             display: flex;
@@ -472,16 +447,10 @@ body {
             align-items: center;
             margin-inline: auto;
             margin-block: 32px 40px;
-            label {
-              font-weight: bolder;
-              margin-bottom: 10px;
-            }
+            label { font-weight: bolder; margin-bottom: 10px; }
             textarea {
-              border: 2px solid #444444;
-              border-radius: 8px;
-              width: 16rem;
+              @extend %form-input-base; // プレースホルダーを適用
               height: 8rem;
-              padding: 4px 8px;
             }
           }
 
@@ -493,9 +462,9 @@ body {
             > button {
               font-weight: bold;
               line-height: 1;
-              color: #444444;
+              color: $color-border-dark;
               background: #dddddd;
-              border: 2px solid #444444;
+              border: 2px solid $color-border-dark;
               border-radius: 100vmax;
               padding: 0.75em 2.0em;
               cursor: pointer;
@@ -510,14 +479,14 @@ body {
               }
               &.btn-color {
                 &--red {
-                  color: #fff;
-                  background: #d32f2f;
+                  color: $color-white;
+                  background: $color-danger;
                   font-size: 1.25rem;
                   letter-spacing: 0.08em;
                 }
                 &--orange {
                   color: black;
-                  background: orange;
+                  background: $color-accent;
                 }
               }
             }
@@ -527,6 +496,9 @@ body {
     }
   }
 
+  // ==========================================
+  // 6. ツールチップ (Tooltip)
+  // ==========================================
   .tooltip {
     position: relative;
     cursor: pointer;
@@ -536,6 +508,7 @@ body {
       visibility: visible;
     }
   }
+  
   .tooltip-text {
     opacity: 0;
     visibility: hidden;
@@ -550,10 +523,11 @@ body {
     font-size: 0.75rem;
     line-height: 1.3;
     background: #333;
-    color: #fff;
+    color: $color-white;
     border-radius: 3px;
     transition: 0.2s ease-out;
     z-index: 10;
+    
     &:after {
       content: '';
       position: absolute;

@@ -26,7 +26,7 @@
     <div class="monthly-change-field">
       <button id="prevMonth">＜</button>
       <label for="currentYearMonth" class="month-picker-wrapper tooltip">
-        <span class="tooltip-text" class="tooltip-text">
+        <span id="yearMonthtooltip" class="tooltip-text">
           <input id="currentYearMonth" type="month" value="">
         </span>
         <h2 id="currentYearMonthDisplay" aria-describedby="yearMonthtooltip"></h2>
@@ -297,7 +297,7 @@
       <hr class="modal-hr">
       <div class="modal-body">
         <div class="modal-body-memo-textarea">
-          <label for="memoInput">↓「2026年5月28日」のメモ↓</label>
+          <label for="memoInput"></label>
           <textarea id="memoInput" placeholder="メモを入力してください..."></textarea>
         </div>
         <hr>
