@@ -433,9 +433,22 @@ class HabitTracker {
   handleDeleteCategory() {
     const category = this.settings.categories.find(c => c.id === this.currentEditingCatId);
     if (!category) return;
+
     if (window.confirm(`カテゴリ「${category.name}」を削除してもよろしいですか？\n※カテゴリ内の項目もすべて削除されます。`)) {
+      const itemIdsToRemove = category.items.map(item => item.id);
+      Object.keys(this.logs).forEach(dateKey => {
+        itemIdsToRemove.forEach(itemId => {
+          if (this.logs[dateKey][itemId] !== undefined) {
+            delete this.logs[dateKey][itemId];
+          }
+        });
+        if (Object.keys(this.logs[dateKey]).length === 0) {
+          delete this.logs[dateKey];
+        }
+      });
       this.settings.categories = this.settings.categories.filter(c => c.id !== this.currentEditingCatId);
       this.saveSettings();
+      this.saveLogs();
       this.renderMatrix();
       document.getElementById('categoryEditDialog').close();
     }
@@ -470,9 +483,19 @@ class HabitTracker {
     const item = cat?.items.find(i => i.id === this.currentEditingItemId);
     if (!cat || !item) return;
 
-    if (window.confirm(`「${item.name}」を削除してもよろしいですか？\n※過去の記録も表示されなくなります。`)) {
-      cat.items = cat.items.filter(i => i.id !== this.currentEditingItemId);
+    if (window.confirm(`「${item.name}」を削除してもよろしいですか？\n※過去の記録も完全に削除されます。`)) {
+      const targetItemId = this.currentEditingItemId;
+      Object.keys(this.logs).forEach(dateKey => {
+        if (this.logs[dateKey][targetItemId] !== undefined) {
+          delete this.logs[dateKey][targetItemId];
+        }
+        if (Object.keys(this.logs[dateKey]).length === 0) {
+          delete this.logs[dateKey];
+        }
+      });
+      cat.items = cat.items.filter(i => i.id !== targetItemId);
       this.saveSettings();
+      this.saveLogs();
       this.renderMatrix();
       document.getElementById('itemEditDialog').close();
     }
