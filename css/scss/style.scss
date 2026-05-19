@@ -229,7 +229,7 @@ body {
           &[data-status="true"]::before { content: "◯"; font-size: 1.5rem; }
           &[data-status="false"]::before { content: "×"; font-size: 1.5rem; }
           &[data-status="none"] { background: #e0e0e0; }
-          &[data-status="undefined"] { background: #e0e0e0; }
+          &[data-status="undefined"] { background: #cfcfcf; }
           @include hover-state(0px);
         }
         @include media-query('sm') {
@@ -292,6 +292,7 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 40px;
+        margin-top: 16px;
       }
     }
   }

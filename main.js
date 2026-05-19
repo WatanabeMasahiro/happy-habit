@@ -289,12 +289,17 @@ class HabitTracker {
       const { catId } = target.dataset;
       this.currentEditingCatId = catId;
 
+      const dialog = document.getElementById('categoryEditDialog');
       const category = this.settings.categories.find(c => c.id === catId);
       if (!category) return;
+
       document.getElementById('editCategoryName').value = category.name;
       document.getElementById('categoryColorEdit').value = category.color || '#c8e6c9';
 
-      const dialog = document.getElementById('categoryEditDialog');
+      const idx = this.settings.categories.findIndex(c => c.id === catId);
+      const totalCats = this.settings.categories.length;
+      document.getElementById('categoryOrderDisplay').textContent = `（${idx + 1}番目 / ${totalCats}項目中）`;
+
       dialog.showModal();
 
       // --- カテゴリ名の編集 ---
@@ -311,8 +316,8 @@ class HabitTracker {
       };
 
       // --- カテゴリの移動 ---
-      document.getElementById('categoryMoveUpBtn').onclick = () => this.moveCategory(catId, 'catUp');
-      document.getElementById('categoryMoveDownBtn').onclick = () => this.moveCategory(catId, 'catDown');
+      document.getElementById('categoryMoveUpBtn').onclick = () => this.moveCategory('catUp');
+      document.getElementById('categoryMoveDownBtn').onclick = () => this.moveCategory('catDown');
 
       // --- カテゴリの削除 ---
       document.getElementById('deleteCategoryBtn').onclick = () => {
@@ -325,15 +330,17 @@ class HabitTracker {
       };
     }
 
-      moveCategory(catId, direction) {
-        // const cat = this.settings.categories.find(c => c.id === this.currentEditingCatId);
-        const idx = this.settings.categories.findIndex(c => c.id === catId);
+      moveCategory(direction) {
+        const idx = this.settings.categories.findIndex(c => c.id === this.currentEditingCatId);
         const targetIdx = direction === 'catUp' ? idx - 1 : idx + 1;
+        const totalCats = this.settings.categories.length;
 
-        if (targetIdx >= 0 && targetIdx < this.settings.categories.length) {
+        if (targetIdx >= 0 && targetIdx < totalCats) {
           [this.settings.categories[idx], this.settings.categories[targetIdx]] = [this.settings.categories[targetIdx], this.settings.categories[idx]];
           this.saveSettings();
           this.renderMatrix();
+
+          document.getElementById('categoryOrderDisplay').textContent = `（${targetIdx + 1}番目 / ${totalCats}項目中）`;
         }
       }
 
@@ -342,6 +349,7 @@ class HabitTracker {
       this.currentEditingItemId = itemId;
       this.currentEditingCatId = catId;
 
+      const dialog = document.getElementById('itemEditDialog');
       const category = this.settings.categories.find(c => c.id === catId);
       const item = category.items.find(i => i.id === itemId);
 
@@ -349,7 +357,10 @@ class HabitTracker {
       if (catDisplay) catDisplay.innerText = `${category.name}`;
       document.getElementById('editItemName').value = item.name;
 
-      const dialog = document.getElementById('itemEditDialog');
+      const idx = category.items.findIndex(i => i.id === itemId);
+      const totalItems = category.items.length;
+      document.getElementById('orderDisplay').textContent = `（${idx + 1}番目 / ${totalItems}項目中）`;
+
       dialog.showModal();
 
       // --- リスト項目名の編集 ---
@@ -362,8 +373,8 @@ class HabitTracker {
       };
 
       // --- リスト項目の移動 ---
-      document.getElementById('moveUpBtn').onclick = () => this.moveItem(this.currentEditingItemId, 'up');
-      document.getElementById('moveDownBtn').onclick = () => this.moveItem(this.currentEditingItemId, 'down');
+      document.getElementById('moveUpBtn').onclick = () => this.moveItem('up');
+      document.getElementById('moveDownBtn').onclick = () => this.moveItem('down');
 
       // --- リスト項目の削除 ---
       document.getElementById('deleteItemBtn').onclick = () => {
@@ -383,15 +394,19 @@ class HabitTracker {
         this.renderMatrix();
       }
 
-      moveItem(itemId, direction) {
+      moveItem(direction) {
         const cat = this.settings.categories.find(c => c.id === this.currentEditingCatId);
-        const idx = cat.items.findIndex(i => i.id === itemId);
+        if (!cat) return;
+        const idx = cat.items.findIndex(i => i.id === this.currentEditingItemId);
         const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+        const totalItems = cat.items.length;
 
-        if (targetIdx >= 0 && targetIdx < cat.items.length) {
+        if (targetIdx >= 0 && targetIdx < totalItems) {
           [cat.items[idx], cat.items[targetIdx]] = [cat.items[targetIdx], cat.items[idx]];
           this.saveSettings();
           this.renderMatrix();
+
+          document.getElementById('orderDisplay').textContent = `（${targetIdx + 1}番目 / ${totalItems}項目中）`;
         }
       }
 

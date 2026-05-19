@@ -221,7 +221,7 @@ body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none] {
   background: #e0e0e0;
 }
 body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
-  background: #e0e0e0;
+  background: #cfcfcf;
 }
 body > main > .matrix-wrapper > .matrix-inner .cell-btn:hover {
   background: rgba(255, 221, 128, 0.8);
@@ -291,6 +291,7 @@ body > main > .table-outside-bottom-field > button.all-data-reset-btn {
     flex-direction: column;
     align-items: center;
     gap: 40px;
+    margin-top: 16px;
   }
 }
 body > dialog {
