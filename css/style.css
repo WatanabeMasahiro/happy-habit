@@ -13,6 +13,16 @@ body > header > .site-name {
 body > main {
   margin-inline: 24px;
 }
+@media screen and (max-width: 768px) {
+  body > main {
+    margin-inline: 20px;
+  }
+}
+@media screen and (max-width: 576px) {
+  body > main {
+    margin-inline: 16px;
+  }
+}
 body > main > .monthly-change-field {
   display: flex;
   width: -moz-fit-content;
@@ -43,16 +53,33 @@ body > main > .monthly-change-field > button#nextMonth:hover {
   border-radius: 0 8px 8px 0;
   transition: all 0.2s ease;
 }
-body > main > .monthly-change-field > #currentYearMonthDisplay {
+body > main > .monthly-change-field > .month-picker-wrapper > span > input[id=currentYearMonth] {
+  background: #555;
+  color: #fff;
+  font-weight: bolder;
+}
+body > main > .monthly-change-field > .month-picker-wrapper > #currentYearMonthDisplay {
   padding-inline: 8px;
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   body > main > .monthly-change-field {
     margin-inline: auto;
   }
 }
 body > main > .matrix-wrapper {
   padding: 20px;
+}
+@media screen and (max-width: 768px) {
+  body > main > .matrix-wrapper {
+    padding-inline: 16px;
+  }
+}
+@media screen and (max-width: 576px) {
+  body > main > .matrix-wrapper {
+    padding-inline: 12px;
+  }
+}
+body > main > .matrix-wrapper {
   background: #eee;
   border: 4px solid #888;
   border-radius: 16px;
@@ -62,6 +89,7 @@ body > main > .matrix-wrapper > .table-inside-up-field {
   justify-content: space-between;
   align-items: start;
   margin-bottom: 10px;
+  margin-inline: 8px;
 }
 body > main > .matrix-wrapper > .table-inside-up-field > #currentYearDisplay {
   font-size: 1.25rem;
@@ -120,7 +148,7 @@ body > main > .matrix-wrapper > .matrix-inner .sticky-col {
   width: 200px;
   z-index: 0;
   text-align: left;
-  padding-left: 10px;
+  padding-inline: 10px;
   overflow-wrap: anywhere;
   word-break: normal;
   line-break: strict;
@@ -152,6 +180,11 @@ body > main > .matrix-wrapper > .matrix-inner .category-row td {
 }
 body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title {
   padding: 8px;
+}
+body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title > .title {
+  display: inline-block;
+  margin-right: 32px;
+  pointer-events: none;
 }
 body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title > .add-item-btn {
   position: absolute;
@@ -197,6 +230,28 @@ body > main > .matrix-wrapper > .matrix-inner .cell-btn:hover {
   border-radius: 0px;
   transition: all 0.2s ease;
 }
+@media screen and (max-width: 576px) {
+  body > main > .matrix-wrapper > .matrix-inner {
+    font-size: 0.75rem;
+  }
+  body > main > .matrix-wrapper > .matrix-inner th, body > main > .matrix-wrapper > .matrix-inner td {
+    width: 32px;
+    height: 34px;
+  }
+  body > main > .matrix-wrapper > .matrix-inner .sticky-col {
+    width: 120px;
+    padding-inline: 8px;
+  }
+  body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title {
+    padding: 6px;
+  }
+  body > main > .matrix-wrapper > .matrix-inner .category-row td.category-title > .title {
+    margin-right: 28px;
+  }
+  body > main > .matrix-wrapper > .matrix-inner .cell-btn {
+    line-height: 34px;
+  }
+}
 body > main > .table-outside-bottom-field {
   display: flex;
   justify-content: space-between;
@@ -231,6 +286,13 @@ body > main > .table-outside-bottom-field > button.all-data-reset-btn {
   margin-inline: 8px;
   padding: 0;
 }
+@media screen and (max-width: 768px) {
+  body > main > .table-outside-bottom-field {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+}
 body > dialog {
   padding: 0;
   border: none;
@@ -261,9 +323,23 @@ body > dialog[open] {
     backdrop-filter: blur(1px);
   }
 }
+@media screen and (max-width: 576px) {
+  body > dialog[open]#categoryEditDialog > .modal-card, body > dialog[open]#itemEditDialog > .modal-card {
+    width: 80svw;
+    margin-inline: auto 2svw;
+  }
+}
 body > dialog[open] > .modal-card {
   background: #fff;
   width: max(400px, 40svw);
+}
+@media screen and (max-width: 576px) {
+  body > dialog[open] > .modal-card {
+    width: 90svw;
+    opacity: 0.95;
+  }
+}
+body > dialog[open] > .modal-card {
   height: auto;
   margin-block: 16svh auto;
   margin-inline: auto;
@@ -355,9 +431,6 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[t
   width: 16rem;
   padding: 4px 8px;
 }
-body > dialog[open] > .modal-card > .modal-body div.modal-body-category-color {
-  text-align: center;
-}
 body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns {
   display: flex;
   justify-content: center;
@@ -376,6 +449,14 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns > butt
 body > dialog[open] > .modal-card > .modal-body div.modal-body-order-btns > button:hover {
   background: orange;
   transition: background 0.2s;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-category-color {
+  text-align: center;
+}
+body > dialog[open] > .modal-card > .modal-body div.modal-body-order-display {
+  text-align: center;
+  color: #333;
+  font-size: 0.75rem;
 }
 body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text {
   display: flex;
@@ -446,4 +527,49 @@ body > dialog[open] > .modal-card > .modal-body div.dialog-btns > button.btn-col
 body > dialog[open] > .modal-card > .modal-body div.dialog-btns > button.btn-color--orange {
   color: black;
   background: orange;
+}
+body .tooltip {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+body .tooltip:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+body .tooltip-text {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  left: 60%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 4px;
+  display: inline-block;
+  padding: 6px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  background: #333;
+  color: #fff;
+  border-radius: 3px;
+  transition: 0.2s ease-out;
+  z-index: 10;
+}
+body .tooltip-text:after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+}
+body .tooltip-text:before {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  right: 40%;
+  margin-right: -7px;
+  border: 7px solid transparent;
+  border-top: 7px solid #333;
 }

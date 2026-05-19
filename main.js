@@ -25,6 +25,7 @@ class HabitTracker {
   constructor(initialSettings, initialLogs = {}) {
     this.settings = JSON.parse(localStorage.getItem('habit_settings')) ?? initialSettings;
     this.logs = JSON.parse(localStorage.getItem('habit_logs')) ?? initialLogs;
+    this.memos = JSON.parse(localStorage.getItem('habit_memos')) ?? {};
     this.currentEditingItemId = null;
     this.currentEditingCatId = null;
     this.editingMemoKey = null;
@@ -48,8 +49,13 @@ class HabitTracker {
     const today = new Date();
     // カレンダー上外の年月の表示更新（currentYearMonthDisplay）
     const currentYearMonthDisplay = document.getElementById('currentYearMonthDisplay');
+    const yearMonthInput = document.getElementById('currentYearMonth');
     if (currentYearMonthDisplay) {
       currentYearMonthDisplay.textContent = `${year}年-${month}月`;
+    }
+    if (yearMonthInput) {  // ツールチップ内の年月フォームの表示更新
+      const formattedMonth = String(month).padStart(2, '0');
+      yearMonthInput.value = `${year}-${formattedMonth}`;
     }
     // カレンダー上内の年の表示更新（currentYearDisplay）
     const currentYearDisplay = document.getElementById('currentYearDisplay');
@@ -93,7 +99,7 @@ class HabitTracker {
         html += `<tr>
                   <td class="sticky-col" data-item-id="${item.id}" data-cat-id="${cat.id}">${item.name}</td>`;
         for (let d = 1; d <= daysInMonth; d++) {
-          const dateKey = `${this.settings.year}-${String(this.settings.month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           const logEntry = this.logs?.[dateKey]?.[item.id];
           const status = (logEntry && typeof logEntry === 'object') ? logEntry.status : (logEntry ?? 'none');
           html += `<td>
@@ -113,19 +119,29 @@ class HabitTracker {
 
   bindEvents() {
     const addCatBtn = document.querySelector('.add-category-item-btn');
-    // セルクリックでダイアログ表示（イベント委譲）
+    // セルクリックでダイアログ表示
     document.getElementById('trackerBody').addEventListener('click', (e) => {
+
       // 各日付マス用のダイアログ表示
       if (e.target.classList.contains('cell-btn')) {
         this.openEditDialog(e.target);
+        return;
       }
+
+      const targetTd = e.target.closest('.sticky-col');
+      if (!targetTd) return;
+
+      const parentRow = targetTd.parentElement;
+
       // カテゴリの編集用ダイアログ表示
-      if (e.target.classList.contains('sticky-col') && e.target.parentElement.classList.contains('category-row')) {
-        this.openCategoryEditDialog(e.target);
+      if (parentRow.classList.contains('category-row')) {
+        if (!e.target.classList.contains('add-item-btn')) {
+          this.openCategoryEditDialog(targetTd);
+        }
       }
       // カテゴリ内リスト項目の編集用ダイアログ表示
-      if (e.target.classList.contains('sticky-col') && !e.target.parentElement.classList.contains('category-row')) {
-        this.openItemEditDialog(e.target);
+      else {
+        this.openItemEditDialog(targetTd);
       }
       // 各カテゴリ内リスト項目の新規追加用ダイアログ表示
       if (e.target.classList.contains('add-item-btn')) {
@@ -193,21 +209,23 @@ class HabitTracker {
         this.saveMemoData();
       });
     }
-    // TODO（削除予定）: テスト用ダイアログ表示
-    // const btn = document.querySelector('.class-name-btn');
-    // if (btn) {
-    //   btn.onclick = () => {
-    //     const dialog = document.getElementById('nameDialog');
-    //     document.getElementById('inputName').value = '';
-    //     dialog.showModal();
-    //   };
-    // }
 
     // 月切り替えボタンクリックイベント
     const prevBtn = document.getElementById('prevMonth');
     const nextBtn = document.getElementById('nextMonth');
     prevBtn.onclick = () => this.changeMonth(-1);
     nextBtn.onclick = () => this.changeMonth(1);
+
+    // カレンダー上外の年月ホバー時：ツールチップ内の年月フォームのイベント
+    const yearMonthInput = document.getElementById('currentYearMonth');
+    if (yearMonthInput) {
+      yearMonthInput.addEventListener('change', (e) => {
+        const value = e.target.value; // 例:2026-05
+        if (!value) return;
+        const [year, month] = value.split('-').map(Number);
+        this.updateCalendarView(year, month);
+      });
+    }
 
     // モーダルを閉じる処理
     const modals = document.querySelectorAll('dialog');
@@ -271,16 +289,15 @@ class HabitTracker {
       const { catId } = target.dataset;
       this.currentEditingCatId = catId;
 
-      const dialog = document.getElementById('categoryEditDialog');
       const category = this.settings.categories.find(c => c.id === catId);
       if (!category) return;
-
       document.getElementById('editCategoryName').value = category.name;
       document.getElementById('categoryColorEdit').value = category.color || '#c8e6c9';
 
+      const dialog = document.getElementById('categoryEditDialog');
       dialog.showModal();
 
-      // --- カテゴリ名の保存 ---
+      // --- カテゴリ名の編集 ---
       document.getElementById('saveCategoryEdit').onclick = () => {
         const newCategoryName = document.getElementById('editCategoryName').value;
         const newCategoryColor = document.getElementById('categoryColorEdit').value;
@@ -325,13 +342,14 @@ class HabitTracker {
       this.currentEditingItemId = itemId;
       this.currentEditingCatId = catId;
 
-      const dialog = document.getElementById('itemEditDialog');
       const category = this.settings.categories.find(c => c.id === catId);
       const item = category.items.find(i => i.id === itemId);
 
       const catDisplay = document.getElementById('displayCatName');
       if (catDisplay) catDisplay.innerText = `${category.name}`;
       document.getElementById('editItemName').value = item.name;
+
+      const dialog = document.getElementById('itemEditDialog');
       dialog.showModal();
 
       // --- リスト項目名の編集 ---
@@ -469,9 +487,7 @@ class HabitTracker {
       const textarea = document.getElementById('memoInput');
 
       label.textContent = `↓ ${labelText} ↓`;
-
-      const allMemos = JSON.parse(localStorage.getItem('habit_memos')) || {};
-      textarea.value = allMemos[storageKey] || '';
+      textarea.value = this.memos[storageKey] || '';
 
       dialog.showModal();
     }
@@ -480,15 +496,14 @@ class HabitTracker {
       if (!this.editingMemoKey) return;
       const textarea = document.getElementById('memoInput');
       const updatedText = textarea.value.trim();
-      const allMemos = JSON.parse(localStorage.getItem('habit_memos')) || {};
 
       if (updatedText === '') {
-        delete allMemos[this.editingMemoKey];
+        delete this.memos[this.editingMemoKey];
       } else {
-        allMemos[this.editingMemoKey] = updatedText;
+        this.memos[this.editingMemoKey] = updatedText;
       }
 
-      localStorage.setItem('habit_memos', JSON.stringify(allMemos));
+      localStorage.setItem('habit_memos', JSON.stringify(this.memos));
 
       this.editingMemoKey = null;
       const dialog = document.getElementById('memosCommonDialog');
@@ -506,6 +521,14 @@ class HabitTracker {
       }
 
       this.saveSettings();
+      this.renderHeader();
+      this.renderMatrix();
+    }
+
+    updateCalendarView(year, month) {
+      this.settings.year = year;
+      this.settings.month = month;
+
       this.renderHeader();
       this.renderMatrix();
     }

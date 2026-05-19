@@ -25,7 +25,12 @@
   <main id="app">
     <div class="monthly-change-field">
       <button id="prevMonth">＜</button>
-      <h2 id="currentYearMonthDisplay"></h2>
+      <label for="currentYearMonth" class="month-picker-wrapper tooltip">
+        <span class="tooltip-text" class="tooltip-text">
+          <input id="currentYearMonth" type="month" value="">
+        </span>
+        <h2 id="currentYearMonthDisplay" aria-describedby="yearMonthtooltip"></h2>
+      </label>
       <button id="nextMonth">＞</button>
     </div>
     <div class="matrix-wrapper">
@@ -130,6 +135,7 @@
             <option value="#FFE0B2">パステルオレンジ</option>
           </datalist>
         </div>
+        <div id="categoryOrderDisplay" class="modal-body-order-display">（2番目 / 5項目中）</div>
         <hr>
         <div class="dialog-btns">
           <button type="button" id="deleteCategoryBtn">削除</button>
@@ -193,6 +199,7 @@
           <button type="button" id="moveUpBtn">↑ 上へ移動</button>
           <button type="button" id="moveDownBtn">↓ 下へ移動</button>
         </div>
+        <div id="orderDisplay" class="modal-body-order-display">（3番目 / 5項目中）</div>
         <hr>
         <div class="dialog-btns">
           <button type="button" id="deleteItemBtn">削除</button>
