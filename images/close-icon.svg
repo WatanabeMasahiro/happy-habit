@@ -8,5 +8,5 @@
 
 <!-- 呼び出し側 -->
 <svg class="close-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <use class="close-icon" href="./images/icon/sample/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+  <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
 </svg>

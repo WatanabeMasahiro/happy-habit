@@ -33,9 +33,23 @@ body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea tex
     scroll-behavior: smooth;
   }
 }
-body > header > .site-name {
-  text-align: center;
+body > header {
+  display: flex;
+  justify-content: center;
   margin-block: 24px;
+}
+body > header > .site-name {
+  padding-inline: 8px;
+}
+@media screen and (max-width: 576px) {
+  body > header {
+    flex-direction: column;
+    align-items: center;
+    margin-block: 24px;
+  }
+  body > header > .logo-icon-svg--right {
+    display: none;
+  }
 }
 body > main {
   margin-inline: 24px;

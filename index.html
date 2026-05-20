@@ -3,23 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Habit Tracker v1</title>
-  <meta name="description" content="サイトの説明">
-  <meta property="og:title" content="サイトタイトル">
+  <title>Happy-Habit | 楽しく続けるハビットトラッカー</title>
+  <meta name="description" content="Happy-habitは、あなたの毎日の習慣化をシンプルに、楽しく応援するハビットトラッカーです。目標をチェックして、ポジティブな毎日を積み重ねましょう。">
+  
+  <meta property="og:title" content="Happy-habit | 楽しく続けるハビットトラッカー">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="">
-  <meta property="og:description" content="サイトの説明">
-  <meta property="og:site_name" content="サイト名">
+  <meta property="og:image" content="images/logo-icon.png">
+  <meta property="og:description" content="Happy-habitは、あなたの毎日の習慣化をシンプルに、楽しく応援するハビットトラッカーです。目標をチェックして、ポジティブな毎日を積み重ねましょう。">
+  <meta property="og:site_name" content="Happy-Habit">
+
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48"/>
+  <meta name="twitter:site" content="@w_cross_pot">
+
+  <link rel="icon" href="images/favicon.ico" sizes="16x16 32x32 48x48"/>
+  <link rel="apple-touch-icon" href="images/apple-touch-logo-icon.png">
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <script type="module" src="main.js" defer></script>
 </head>
 <body>
   <header id="header">
-    <h1 class="site-name">Habit Tracker</h1>
+    <svg class="logo-icon-svg logo-icon-svg--left" width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <use class="logo-icon" href="images/logo-icon.svg#logo-icon"  x="0" y="0" fill="" stroke="none"></use>
+    </svg>
+    <h1 class="site-name">Happy-Habit</h1>
+    <svg class="logo-icon-svg logo-icon-svg--right" width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <use class="logo-icon" href="images/logo-icon.svg#logo-icon"  x="0" y="0" fill="" stroke="none"></use>
+    </svg>
   </header>
 
   <main id="app">
@@ -59,6 +69,7 @@
     </div>
   </main>
 
+
   <!-- マス目用ステータスダイアログ -->
   <dialog id="statusDialog">
     <div class="modal-card">
@@ -67,8 +78,8 @@
           <h3><span id="selectDayInStatusDialog"></span>の更新</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -102,8 +113,8 @@
           <h3>カテゴリーの更新</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -153,8 +164,8 @@
           <h3>リスト項目の追加</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -180,8 +191,8 @@
           <h3>リスト項目の更新</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -217,8 +228,8 @@
           <h3>カテゴリの追加</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -262,8 +273,8 @@
           <h3>全データ削除</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
@@ -289,8 +300,8 @@
           <h3 id="modalTitle">メモ編集</h3>
         </div>
         <button type="button" class="modal-close-icon-button" aria-label="閉じる">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <use class="close-icon" href="close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
+          <svg class="close-icon-svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <use class="close-icon" href="images/close-icon.svg#close-icon" x="0" y="0" fill="" stroke="none"></use>
           </svg>
         </button>
       </div>
