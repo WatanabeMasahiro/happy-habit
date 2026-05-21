@@ -254,8 +254,11 @@ body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=false]::befo
   content: "×";
   font-size: 1.5rem;
 }
-body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none], body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none] {
   background: #e0e0e0;
+}
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
+  background: #cfcfcf;
 }
 body > main > .matrix-wrapper > .matrix-inner .cell-btn:hover {
   background: rgb(255, 228, 155);

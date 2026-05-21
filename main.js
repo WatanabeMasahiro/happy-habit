@@ -1,34 +1,10 @@
 // ==========================================
-// 1. 初期データ定義 & ヘルパー
+// 外部モジュールの読み込み
 // ==========================================
-const now = new Date();
-const formatDateComponent = (num) => String(num).padStart(2, '0');
-
-const todayKey = `${now.getFullYear()}-${formatDateComponent(now.getMonth() + 1)}-${formatDateComponent(now.getDate())}`;
-
-const initialSettings = {
-  year: now.getFullYear(),
-  month: now.getMonth() + 1,
-  categories: [
-    {
-      id: "cat_sample", 
-      name: "例)健康習慣", 
-      color: "#c8e6c9",
-      items: [
-        { id: "item_sample", name: "例)コップ1杯の水を飲む" }
-      ]
-    }
-  ]
-};
-
-const initialLogs = {
-  [todayKey]: {
-    "item_sample": { status: true, memo: "サンプル記録です" }
-  }
-};
+import { initialSettings, initialLogs, formatDateComponent } from './constants.js';
 
 // ==========================================
-// 2. メインアプリケーションクラス
+// メインアプリケーションクラス
 // ==========================================
 class HabitTracker {
   constructor(initialSettings, initialLogs = {}) {
@@ -590,6 +566,6 @@ class HabitTracker {
 }
 
 // ==========================================
-// 3. アプリケーション起動
+// アプリケーション起動
 // ==========================================
 const app = new HabitTracker(initialSettings, initialLogs);
