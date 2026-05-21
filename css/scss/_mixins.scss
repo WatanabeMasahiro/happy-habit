@@ -1,0 +1,40 @@
+@use "variables" as v;
+
+// ==========================================
+// ミックスイン & プレースホルダー
+// ==========================================
+@mixin hover-state($border-radius: 8px) {
+  &:hover {
+    background: v.$color-hover-yellow;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: $border-radius;
+    transition: all 0.2s ease;
+  }
+}
+
+// モーダル内の入力フォーム共通スタイル（プレースホルダー）
+%form-input-base {
+  border: 2px solid v.$color-border-dark;
+  border-radius: 8px;
+  width: 16rem;
+  padding: 4px 8px;
+}
+
+// メディアクエリ
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 1200px,
+) !default;
+
+@mixin media-query($breakpoint-name) {
+  $width: map-get($breakpoints, $breakpoint-name);
+  @if $width {
+    @media screen and (max-width: #{$width}) {
+      @content;
+    }
+  } @else {
+    @warn "指定されたブレイクポイント「#{$breakpoint-name}」は定義されていません。";
+  }
+}

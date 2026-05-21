@@ -1,5 +1,5 @@
 @charset "UTF-8";
-body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea textarea, body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name input[type=text] {
+body > dialog[open] > .modal-card > .modal-body div.modal-body-item-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-category-name input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-reset-text input[type=text], body > dialog[open] > .modal-card > .modal-body div.modal-body-memo-textarea textarea {
   border: 2px solid #444444;
   border-radius: 8px;
   width: 16rem;
@@ -83,7 +83,7 @@ body > main > .monthly-change-field > button#prevMonth {
   border-radius: 8px 0 0 8px;
 }
 body > main > .monthly-change-field > button#prevMonth:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 8px 0 0 8px;
@@ -93,7 +93,7 @@ body > main > .monthly-change-field > button#nextMonth {
   border-radius: 0 8px 8px 0;
 }
 body > main > .monthly-change-field > button#nextMonth:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 0 8px 8px 0;
@@ -135,7 +135,7 @@ body > main > .matrix-wrapper > .table-inside-up-field > #currentYearDisplay {
   cursor: pointer;
 }
 body > main > .matrix-wrapper > .table-inside-up-field > #currentYearDisplay:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 8px;
@@ -153,7 +153,7 @@ body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-fiel
   cursor: pointer;
 }
 body > main > .matrix-wrapper > .table-inside-up-field > .overall-notes-btn-field > button.overall-notes:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 0px;
@@ -183,7 +183,7 @@ body > main > .matrix-wrapper > .matrix-inner .sticky-col {
   left: 0;
   background: #fff;
   width: 200px;
-  z-index: 0;
+  z-index: 1;
   text-align: left;
   padding-inline: 10px;
   overflow-wrap: anywhere;
@@ -203,7 +203,7 @@ body > main > .matrix-wrapper > .matrix-inner .sticky-col::after {
   background: #999;
 }
 body > main > .matrix-wrapper > .matrix-inner .sticky-col:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 0px;
@@ -234,7 +234,7 @@ body > main > .matrix-wrapper > .matrix-inner .is-today {
   background: yellow;
 }
 body > main > .matrix-wrapper > .matrix-inner .memo-trigger:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 0px;
@@ -254,14 +254,11 @@ body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=false]::befo
   content: "×";
   font-size: 1.5rem;
 }
-body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none] {
+body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=none], body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
   background: #e0e0e0;
 }
-body > main > .matrix-wrapper > .matrix-inner .cell-btn[data-status=undefined] {
-  background: #cfcfcf;
-}
 body > main > .matrix-wrapper > .matrix-inner .cell-btn:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 0px;
@@ -315,7 +312,7 @@ body > main > .table-outside-bottom-field > button.add-category-item-btn > span 
   padding-right: 4px;
 }
 body > main > .table-outside-bottom-field > button.add-category-item-btn:hover {
-  background: rgba(255, 221, 128, 0.8);
+  background: rgb(255, 228, 155);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 8px;
