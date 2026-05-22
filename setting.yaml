@@ -1,0 +1,23 @@
+name: Deploy to Xserver
+
+on:
+  push:
+    branches:
+      - main # mainブランチにpushされたら起動
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+    
+    - name: 🚀 Sync files to Xserver
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.XSERVER_HOST }}     # Xサーバーの接続先ホスト
+        username: ${{ secrets.XSERVER_USERNAME }} # FTPユーザー名
+        password: ${{ secrets.XSERVER_PASSWORD }} # FTPパスワード
+        local-dir: ./                             # アップロードしたい手元のフォルダ（全部）
+        server-dir: ./public_html/happy-habit/    # Xサーバー側の公開フォルダのパス
