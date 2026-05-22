@@ -18,8 +18,13 @@ jobs:
     - name: 🚀 Sync files to Xserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        server: ${{ secrets.XSERVER_HOST }}     # Xサーバーの接続先ホスト
+        server: ${{ secrets.XSERVER_HOST }}       # Xサーバーの接続先ホスト
         username: ${{ secrets.XSERVER_USERNAME }} # FTPユーザー名
         password: ${{ secrets.XSERVER_PASSWORD }} # FTPパスワード
         local-dir: ./                             # アップロードしたい手元のフォルダ（全部）
-        server-dir: ./public_html/happy-habit/    # Xサーバー側の公開フォルダのパス
+        server-dir: ./                            # Xサーバー側の公開フォルダのパス
+        exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github*
+            **/.github*/**
