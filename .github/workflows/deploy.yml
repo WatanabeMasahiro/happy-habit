@@ -12,7 +12,9 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
-    
+      with:
+          fetch-depth: 0
+
     - name: 🚀 Sync files to Xserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
@@ -20,4 +22,4 @@ jobs:
         username: ${{ secrets.XSERVER_USERNAME }} # FTPユーザー名
         password: ${{ secrets.XSERVER_PASSWORD }} # FTPパスワード
         local-dir: ./                             # アップロードしたい手元のフォルダ（全部）
-        server-dir: ./happy-habit/    # Xサーバー側の公開フォルダのパス
+        server-dir: ./public_html/happy-habit/    # Xサーバー側の公開フォルダのパス
