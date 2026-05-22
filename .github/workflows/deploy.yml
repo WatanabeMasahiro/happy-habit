@@ -20,4 +20,4 @@ jobs:
         username: ${{ secrets.XSERVER_USERNAME }} # FTPユーザー名
         password: ${{ secrets.XSERVER_PASSWORD }} # FTPパスワード
         local-dir: ./                             # アップロードしたい手元のフォルダ（全部）
-        server-dir: ./public_html/happy-habit/    # Xサーバー側の公開フォルダのパス
+        server-dir: ./happy-habit/    # Xサーバー側の公開フォルダのパス
